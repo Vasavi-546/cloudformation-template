@@ -31,7 +31,7 @@ stages {
                 aws cloudformation deploy \
                 --template-file template.yaml \
                 --stack-name my-cloudformation-stack \
-                --parameter-overrides BucketName=my-jenkins-bucket \
+                --parameter-overrides BucketName=my-jenkins-pipeline-bucket \
                 --capabilities CAPABILITY_NAMED_IAM
                 '''
             }
