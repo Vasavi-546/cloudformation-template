@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t3.micro
+
+  BucketName:
+    Type: String
+
+Resources:
+
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: ami-0b0b78dcacbab728f   
+
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
