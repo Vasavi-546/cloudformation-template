@@ -2,31 +2,40 @@ pipeline {
     agent any
 
     environment {
-        AWS_DEFAULT_REGION = "us-east-2"
-        PATH = "/opt/homebrew/bin:${env.PATH}"  // Add AWS CLI path here
+        AWS_DEFAULT_REGION = 'us-east-2'
     }
 
     stages {
-        stage('Checkout Code') {
-            steps { checkout scm }
-        }
 
-        stage('Validate Template') {
+        stage('Validate CloudFormation Template') {
             steps {
-                sh 'aws cloudformation validate-template --template-body file://template.yaml'
+                withCredentials([
+                    string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
+                ]) {
+                    sh '''
+                    aws cloudformation validate-template \
+                    --template-body file://template.yaml
+                    '''
+                }
             }
         }
 
         stage('Deploy Stack') {
             steps {
-                sh '''
-                aws cloudformation deploy \
-                --template-file template.yaml \
-                --stack-name dev-stack \
-                --parameter-overrides InstanceType=t3.micro BucketName=myuniquecloudbucket123 \
-                --capabilities CAPABILITY_NAMED_IAM
-                '''
+                withCredentials([
+                    string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
+                ]) {
+                    sh '''
+                    aws cloudformation deploy \
+                    --template-file template.yaml \
+                    --stack-name my-cloudformation-stack \
+                    --capabilities CAPABILITY_NAMED_IAM
+                    '''
+                }
             }
         }
+
     }
 }
