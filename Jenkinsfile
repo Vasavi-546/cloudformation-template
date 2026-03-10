@@ -29,7 +29,7 @@ pipeline {
                     string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
                 ]) {
                     sh '''
-                    /usr/local/bin/aws cloudformation deploy \
+                    /opt/homebrew/bin/aws cloudformation deploy \
                     --region $AWS_DEFAULT_REGION \
                     --template-file template.yaml \
                     --stack-name my-cloudformation-stack \
@@ -41,9 +41,4 @@ pipeline {
         }
 
     }
-
-
-
 }
-
-
